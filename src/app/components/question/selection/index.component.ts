@@ -1,6 +1,6 @@
 /*
  * @LastEditors: hongyongbo
- * @LastEditTime: 2020-03-22 07:29:14
+ * @LastEditTime: 2020-03-22 07:49:27
  * @Description:
  * @Notice:
  */
@@ -10,6 +10,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { questionUrl } from '../../../api/index';
+
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -30,7 +32,6 @@ interface IOptions {
   desc: string; id: string; correct: boolean;
 }
 
-const questionUrl = 'http://127.0.0.1:9000/examOnline/v1';
 
 @Component({
   selector: 'app-question-selection',
@@ -48,9 +49,7 @@ export class QuestionSelectionComponent {
 
   isEdit = false;
 
-
   tagList: Array<{ label: string; value: string }> = [];
-
 
   question: IQuestion = {
     id: '',

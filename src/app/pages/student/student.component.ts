@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import {paperUrl} from '../../api/index';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -24,10 +25,6 @@ interface IPaper {
   totalScore?: number;
   questions: [any];
 }
-
-const paperUrl = 'http://127.0.0.1:9000/papers/v1';
-
-
 
 @Component({
   selector: 'app-student',
