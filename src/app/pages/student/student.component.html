@@ -1,0 +1,72 @@
+<section class="student-zone" *ngIf="!showResult">
+  <header>
+    <h1>在线作答</h1>
+  </header>
+
+  <main>
+    <div
+      *ngFor="let question of paper.questions; let key = index"
+      class="question-item"
+    >
+      <p class="title">{{ key + 1 }} : {{ question.questionDesc }}</p>
+      <div class="content">
+        <div *ngIf="question.type === 'single'">
+          <nz-radio-group
+            [(ngModel)]="question.answer"
+            (ngModelChange)="handleChangeAnswer(key, $event)"
+          >
+            <label
+              nz-radio
+              [ngStyle]="style"
+              *ngFor="let option of question.options; let okey = index"
+              nzValue="{{ getIndex(okey) }}"
+              nzName="radiogroup"
+            >
+              <span>{{ getIndex(okey) }} </span>
+              <span>{{ option.desc }} </span>
+            </label>
+          </nz-radio-group>
+        </div>
+        <div *ngIf="question.type === 'multiple'">
+          <nz-checkbox-wrapper
+            style="width: 100%;"
+            (nzOnChange)="handleChangeAnswerMultiple(key, $event)"
+          >
+            <div nz-row>
+              <div
+                nz-col
+                nzSpan="16"
+                *ngFor="let option of question.options; let okey = index"
+              >
+                <label nz-checkbox nzValue="{{ getIndex(okey) }}">
+                  <span>{{ getIndex(okey) }} </span>
+                  <span>{{ option.desc }} </span>
+                </label>
+              </div>
+            </div>
+          </nz-checkbox-wrapper>
+        </div>
+        <div *ngIf="question.type === 'qa'">
+          <textarea rows="4" nz-input [(ngModel)]="question.answer"></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <button type="button" (click)="submit()" class="ant-btn ant-btn-primary">
+      <span>提交答案</span>
+    </button>
+  </footer>
+</section>
+
+<nz-result
+  *ngIf="showResult"
+  nzStatus="success"
+  nzTitle="{{myScore}}分"
+  nzSubTitle="百尺竿头更进一步！"
+>
+  <div nz-result-extra>
+    <button nz-button (click)="retry()">重新答题</button>
+  </div>
+</nz-result>

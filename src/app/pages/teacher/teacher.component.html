@@ -1,0 +1,16 @@
+<nz-tabset (nzSelectedIndexChange)='onTabClick($event)'>
+  <nz-tab
+    *ngFor="let tab of tabs"
+    [nzTitle]="tab.name"
+    [nzDisabled]="tab.disabled"
+  >
+  </nz-tab>
+</nz-tabset>
+<section>
+  <app-question-selection *ngIf="tabIndex === 0" [questionType]='questionType'> </app-question-selection>
+
+  <app-question-selection *ngIf="tabIndex === 1" [questionType]='questionType'> </app-question-selection>
+  
+  <app-question-selection *ngIf="tabIndex === 2" [questionType]='questionType'> </app-question-selection>
+
+</section>

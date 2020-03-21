@@ -6,5 +6,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.less']
 })
 export class AppComponent {
-  title = 'examOnline';
+  isCollapsed = false;
+  public colors = [ 'red', 'blue', 'yellow', 'green' ];
 }

@@ -1,0 +1,124 @@
+<!--
+ * @LastEditors: hongyongbo
+ * @LastEditTime: 2020-03-21 23:54:34
+ * @Description: 
+ * @Notice: 
+ -->
+
+<section>
+  <button nz-button nzType="primary" (click)="open()">添加</button>
+
+  <!-- 右侧添加、编辑抽屉 -->
+  <nz-drawer
+    [nzBodyStyle]="{
+      height: 'calc(100% - 55px)',
+      overflow: 'auto',
+      'padding-bottom': '53px'
+    }"
+    [nzMaskClosable]="false"
+    [nzWidth]="720"
+    [nzVisible]="visible"
+    nzTitle="添加题目"
+    (nzOnClose)="close()"
+  >
+    <header>
+      <span>题目描述:</span>
+      <input nz-input placeholder="题目描述" [(ngModel)]="question.questionDesc" />
+      <span>分数:</span>
+      <input nz-input placeholder="分数" [(ngModel)]="question.score" />
+    </header>
+    
+    <section *ngIf="questionType !=='qa'">
+      <div class="option-header">
+        <div class="index-num">序号</div>
+        <div class="checkbox">答案</div>
+        <div class="input">选项内容</div>
+        <div class="dynamic-delete-button">操作</div>
+      </div>
+      <div *ngFor="let option of options; let key = index" class="option-item">
+        <span class="index-num">{{ getIndex(key) }}</span>
+        <input
+          type="checkbox"
+          class="checkbox"
+          [checked]="option.correct"
+          (click)="checkOption(option.id)"
+        />
+        <input
+          nz-input
+          placeholder="选项描述"
+          [(ngModel)]="option.desc"
+          class="input"
+        />
+        <i
+          nz-icon
+          nzType="minus-circle-o"
+          class="dynamic-delete-button"
+          (click)="removeField(option.id, $event)"
+          >删除</i
+        >
+      </div>
+      <div>
+        <button
+          nz-button
+          nzType="dashed"
+          class="add-button"
+          (click)="addField($event)"
+        >
+          <i nz-icon nzType="plus"></i>
+          添加选项
+        </button>
+      </div>
+    </section>
+    <section *ngIf="questionType ==='qa'">
+      <span>答案:</span>
+      <input nz-input placeholder="答案" [(ngModel)]="question.answer" />
+    </section>
+    <footer>
+      <button
+        type="button"
+        (click)="close()"
+        class="ant-btn"
+        style="margin-right: 8px;"
+      >
+        <span>放弃添加</span>
+      </button>
+      <button type="button" (click)="submit()" class="ant-btn ant-btn-primary">
+        <span>确认添加</span>
+      </button>
+    </footer>
+  </nz-drawer>
+
+  <!-- 显示已添加题目的可折叠区域 -->
+  <nz-collapse>
+    <nz-collapse-panel
+      *ngFor="let panel of panels"
+      [nzHeader]="panel.questionDesc"
+      [nzActive]="panel.active"
+    >
+      <div>
+        <button
+          type="button"
+          (click)="editQuestion(panel.id)"
+          class="ant-btn"
+          style="margin-right: 8px;"
+        >
+          <span>编辑题目</span>
+        </button>
+        <button
+          type="button"
+          (click)="deleteQuestion(panel.id)"
+          class="ant-btn"
+          style="margin-right: 8px;"
+        >
+          <span>删除题目</span>
+        </button>
+        <section class="options">
+          <p *ngFor="let selection of panel.options;let key=index">
+            <span class="num">{{ getIndex(key) }}:</span>  <span class='content'>{{ selection.desc }}</span> 
+          </p>
+        </section>
+        
+      </div>
+    </nz-collapse-panel>
+  </nz-collapse>
+</section>
