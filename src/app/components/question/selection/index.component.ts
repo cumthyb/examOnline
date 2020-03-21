@@ -1,6 +1,6 @@
 /*
  * @LastEditors: hongyongbo
- * @LastEditTime: 2020-03-22 07:49:27
+ * @LastEditTime: 2020-03-22 07:53:10
  * @Description:
  * @Notice:
  */
@@ -25,7 +25,7 @@ interface IQuestion {
   score: number;
   options?: any;
   answer?: string;
-  type?: 'single|multiple|qa';
+  type?: 'single|multiple|qa|questionnaire';
 }
 
 interface IOptions {
