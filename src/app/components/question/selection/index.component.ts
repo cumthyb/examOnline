@@ -1,6 +1,6 @@
 /*
  * @LastEditors: hongyongbo
- * @LastEditTime: 2020-03-21 23:43:58
+ * @LastEditTime: 2020-03-22 07:29:14
  * @Description:
  * @Notice:
  */
@@ -47,6 +47,10 @@ export class QuestionSelectionComponent {
   visible = false;
 
   isEdit = false;
+
+
+  tagList: Array<{ label: string; value: string }> = [];
+
 
   question: IQuestion = {
     id: '',
@@ -225,6 +229,11 @@ export class QuestionSelectionComponent {
   }
 
   ngOnInit() {
+    const children: Array<{ label: string; value: string }> = [];
+    for (let i = 10; i < 36; i++) {
+      children.push({ label: i.toString(36) + i, value: i.toString(36) + i });
+    }
+    this.tagList = children;
     this.getQuestions(this.questionType);
   }
 

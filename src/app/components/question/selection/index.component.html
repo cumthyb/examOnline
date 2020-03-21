@@ -1,6 +1,6 @@
 <!--
  * @LastEditors: hongyongbo
- * @LastEditTime: 2020-03-21 23:54:34
+ * @LastEditTime: 2020-03-22 07:34:23
  * @Description: 
  * @Notice: 
  -->
@@ -22,8 +22,18 @@
     (nzOnClose)="close()"
   >
     <header>
+      <span>题目分类:</span>
+      <nz-select nzMode="tags" nzPlaceHolder="Tag Mode">
+        <nz-option *ngFor="let option of tagList" [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
+      </nz-select>
+
+      <span>难度打分:</span>
+      <nz-rate [ngModel]="2.5" nzAllowHalf></nz-rate>
+      <br>
+
       <span>题目描述:</span>
       <input nz-input placeholder="题目描述" [(ngModel)]="question.questionDesc" />
+      
       <span>分数:</span>
       <input nz-input placeholder="分数" [(ngModel)]="question.score" />
     </header>
