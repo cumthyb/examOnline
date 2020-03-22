@@ -32,6 +32,13 @@ export class TeacherComponent {
   tabIndex = 0;
   questionType = 'single';
 
+
+  /**
+   *
+   * 切换tab页
+   * @param {*} idx
+   * @memberof TeacherComponent
+   */
   onTabClick(idx) {
     this.tabIndex = idx;
     if (idx === 0) {

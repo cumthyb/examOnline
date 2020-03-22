@@ -1,6 +1,6 @@
 /*
  * @LastEditors: hongyongbo
- * @LastEditTime: 2020-03-22 07:53:10
+ * @LastEditTime: 2020-03-23 06:55:55
  * @Description:
  * @Notice:
  */
@@ -77,6 +77,189 @@ export class QuestionSelectionComponent {
     this.isEdit = false;
   }
 
+  /**
+   * 移除选项
+   *
+   * @param {string} id
+   * @param {MouseEvent} e
+   * @memberof QuestionSelectionComponent
+   */
+  removeField(id: string, e: MouseEvent): void {
+    e.preventDefault();
+    const idx = this.options.findIndex(item => item.id === id);
+    this.options.splice(idx, 1);
+    this.question.options = this.options;
+  }
+  /**
+   * 添加选项
+   *
+   * @param {MouseEvent} [e]
+   * @memberof QuestionSelectionComponent
+   */
+  addField(e?: MouseEvent): void {
+    if (e) {
+      e.preventDefault();
+    }
+    this.options.push({
+      desc: '选项描述',
+      id: `option-${Date.now()}`,
+      correct: false
+    });
+  }
+  /**
+   * 选择题标记正确答案
+   *
+   * @param {string} key
+   * @memberof QuestionSelectionComponent
+   */
+  checkOption(key: string): void {
+    const idx = this.options.findIndex(item => item.id === key);
+    this.options[idx].correct = !this.options[idx].correct;
+  }
+
+  /**
+   * 响应编辑操作
+   *
+   * @param {string} id
+   * @memberof QuestionSelectionComponent
+   */
+  editQuestion(id: string): void {
+    this.isEdit = true;
+    const idx = this.questions.findIndex(item => item.id === id);
+    const question = this.questions[idx];
+    this.options = [].concat(question.options);
+    this.question = { ...question };
+    this.visible = true;
+  }
+
+  /**
+   * 响应删除操作
+   *
+   * @param {string} id
+   * @memberof QuestionSelectionComponent
+   */
+  deleteQuestion(id: string): void {
+    const idx = this.questions.findIndex(item => item.id === id);
+    const obj = this.questions.splice(idx, 1);
+    this.panels = this.questions;
+    this.deletetQuestion(obj[0]);
+  }
+
+  reset(): void {
+    this.question = {
+      id: '',
+      questionDesc: '',
+      score: 0,
+      options: []
+    };
+    this.options = [];
+  }
+
+
+  /**
+   *
+   * 新建试题
+   * @param {IQuestion} question
+   * @returns
+   * @memberof QuestionSelectionComponent
+   */
+  saveQuestion(question: IQuestion) {
+    return this.http.post<IQuestion>(questionUrl, question, httpOptions)
+      .subscribe(
+        val => {
+          console.log(val);
+        },
+        res => {
+          if (res.status === 200) {
+            this.createNotification('success', '操作成功！');
+          } else {
+            this.createNotification('error', res);
+          }
+        }
+
+      );
+  }
+
+  /**
+   * 编辑更新试题
+   *
+   * @param {IQuestion} question
+   * @returns
+   * @memberof QuestionSelectionComponent
+   */
+  putQuestion(question: IQuestion) {
+    return this.http.put<IQuestion>(questionUrl, question, httpOptions)
+      .subscribe(
+        val => {
+          console.log(val);
+        },
+        res => {
+          if (res.status === 200) {
+            this.createNotification('success', '操作成功！');
+          } else {
+            this.createNotification('error', res);
+          }
+        }
+      );
+  }
+
+
+  /**
+   * 删除试题
+   *
+   * @param {IQuestion} question
+   * @returns
+   * @memberof QuestionSelectionComponent
+   */
+  deletetQuestion(question: IQuestion) {
+    return this.http.delete<IQuestion>(questionUrl, { params: { id: question.id } })
+      .subscribe(
+        val => {
+          console.log(val);
+        },
+        res => {
+          if (res.status === 200) {
+            this.createNotification('success', '操作成功！');
+          } else {
+            this.createNotification('error', res);
+          }
+        }
+      );
+  }
+
+  /**
+   *
+   * 按类型获取试题
+   * @param {string} type
+   * @returns {*}
+   * @memberof QuestionSelectionComponent
+   */
+  getQuestions(type: string): any {
+    const isQuestionArray = (props: any): props is Array<IQuestion> =>
+      typeof (props as Array<IQuestion>) !== 'undefined';
+
+    return this.http.get<[IQuestion]>(questionUrl, { params: { type } })
+      .subscribe(
+        val => {
+          this.questions = val;
+          this.panels = this.questions;
+          // }
+        },
+        res => {
+          if (res.status === 200) {
+            this.createNotification('success', '操作成功！');
+          } else {
+            this.createNotification('error', res);
+          }
+        }
+      );
+  }
+
+  /**
+   * 提交编辑或新建结果
+   *
+   * @memberof QuestionSelectionComponent
+   */
   submit(): void {
     if (!this.isEdit) {
       const question = {
@@ -100,124 +283,6 @@ export class QuestionSelectionComponent {
     this.reset();
   }
 
-  removeField(id: string, e: MouseEvent): void {
-    e.preventDefault();
-    const idx = this.options.findIndex(item => item.id === id);
-    this.options.splice(idx, 1);
-    this.question.options = this.options;
-  }
-
-  addField(e?: MouseEvent): void {
-    if (e) {
-      e.preventDefault();
-    }
-    this.options.push({
-      desc: '选项描述',
-      id: `option-${Date.now()}`,
-      correct: false
-    });
-  }
-
-  checkOption(key: string): void {
-    const idx = this.options.findIndex(item => item.id === key);
-    this.options[idx].correct = !this.options[idx].correct;
-  }
-
-  editQuestion(id: string): void {
-    this.isEdit = true;
-    const idx = this.questions.findIndex(item => item.id === id);
-    const question = this.questions[idx];
-    this.options = [].concat(question.options);
-    this.question = { ...question };
-    this.visible = true;
-  }
-
-  deleteQuestion(id: string): void {
-    const idx = this.questions.findIndex(item => item.id === id);
-    const obj = this.questions.splice(idx, 1);
-    this.panels = this.questions;
-    this.deletetQuestion(obj[0]);
-  }
-
-  reset(): void {
-    this.question = {
-      id: '',
-      questionDesc: '',
-      score: 0,
-      options: []
-    };
-    this.options = [];
-  }
-
-  saveQuestion(question: IQuestion) {
-    return this.http.post<IQuestion>(questionUrl, question, httpOptions)
-      .subscribe(
-        val => {
-          console.log(val);
-        },
-        res => {
-          if (res.status === 200) {
-            this.createNotification('success', '操作成功！');
-          } else {
-            this.createNotification('error', res);
-          }
-        }
-
-      );
-  }
-
-  putQuestion(question: IQuestion) {
-    return this.http.put<IQuestion>(questionUrl, question, httpOptions)
-      .subscribe(
-        val => {
-          console.log(val);
-        },
-        res => {
-          if (res.status === 200) {
-            this.createNotification('success', '操作成功！');
-          } else {
-            this.createNotification('error', res);
-          }
-        }
-      );
-  }
-
-  deletetQuestion(question: IQuestion) {
-    return this.http.delete<IQuestion>(questionUrl, { params: { id: question.id } })
-      .subscribe(
-        val => {
-          console.log(val);
-        },
-        res => {
-          if (res.status === 200) {
-            this.createNotification('success', '操作成功！');
-          } else {
-            this.createNotification('error', res);
-          }
-        }
-      );
-  }
-
-  getQuestions(type: string): any {
-    const isQuestionArray = (props: any): props is Array<IQuestion> =>
-      typeof (props as Array<IQuestion>) !== 'undefined';
-
-    return this.http.get<[IQuestion]>(questionUrl, { params: { type } })
-      .subscribe(
-        val => {
-          this.questions = val;
-          this.panels = this.questions;
-          // }
-        },
-        res => {
-          if (res.status === 200) {
-            this.createNotification('success', '操作成功！');
-          } else {
-            this.createNotification('error', res);
-          }
-        }
-      );
-  }
 
   createNotification(type: string, msg: string): void {
     this.notification.create(
@@ -235,6 +300,4 @@ export class QuestionSelectionComponent {
     this.tagList = children;
     this.getQuestions(this.questionType);
   }
-
-
 }

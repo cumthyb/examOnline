@@ -4,6 +4,7 @@
   </header>
 
   <main>
+    <!-- 答卷列表-start -->
     <nz-table #basicTable [nzData]="listOfData">
       <thead>
         <tr>
@@ -26,7 +27,9 @@
         </tr>
       </tbody>
     </nz-table>
+    <!-- 答卷列表-end -->
 
+    <!-- 右侧抽屉-start -->
     <nz-drawer
       [nzClosable]="true"
       [nzVisible]="visible"
@@ -35,7 +38,7 @@
       nzTitle="自助评分"
       (nzOnClose)="close()"
     >
-      <div class='drawer-content'>
+      <div class="drawer-content">
         <div
           *ngFor="let question of paper.questions; let key = index"
           class="paper-item"
@@ -43,11 +46,21 @@
           <p class="title">{{ key + 1 }} : {{ question.questionDesc }}</p>
           <div class="answer-container">
             <span>考生作答:</span>
-            <textarea rows="4" nz-input [(ngModel)]="question.answer"></textarea>
+            <textarea
+              rows="4"
+              nz-input
+              [(ngModel)]="question.answer"
+            ></textarea>
           </div>
           <div class="score-container">
             <span>分数评判:</span>
-            <nz-input-number class="score" [(ngModel)]="question.score" [nzMin]="1" [nzMax]="100" [nzStep]="1"></nz-input-number>
+            <nz-input-number
+              class="score"
+              [(ngModel)]="question.score"
+              [nzMin]="1"
+              [nzMax]="100"
+              [nzStep]="1"
+            ></nz-input-number>
           </div>
         </div>
         <div class="btns">
@@ -59,11 +72,17 @@
           >
             <span>关闭</span>
           </button>
-          <button type="button" (click)="submit()" class="ant-btn ant-btn-primary">
+          <button
+            type="button"
+            (click)="submit()"
+            class="ant-btn ant-btn-primary"
+          >
             <span>确认添加</span>
           </button>
         </div>
       </div>
     </nz-drawer>
+    <!-- 右侧抽屉-end -->
+
   </main>
 </section>

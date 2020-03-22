@@ -20,10 +20,10 @@
       [nzStyle]="{ top: '20px' }"
       [(nzVisible)]="isVisibleTop"
       nzTitle="输入姓名"
-      (nzOnCancel)="isVisibleTop=false"
+      (nzOnCancel)="isVisibleTop = false"
       (nzOnOk)="handleOkTop()"
     >
-    <input nz-input placeholder="姓名" [(ngModel)]="stName" />
+      <input nz-input placeholder="姓名" [(ngModel)]="stName" />
     </nz-modal>
   </header>
 
@@ -33,7 +33,9 @@
       class="question-item"
     >
       <p class="title">{{ key + 1 }} : {{ question.questionDesc }}</p>
+
       <div class="content">
+        <!-- 单选题答卷-start -->
         <div *ngIf="question.type === 'single'">
           <nz-radio-group
             [(ngModel)]="question.answer"
@@ -51,6 +53,9 @@
             </label>
           </nz-radio-group>
         </div>
+        <!-- 单选题答卷-end -->
+
+        <!-- 多选题答卷-start -->
         <div *ngIf="question.type === 'multiple'">
           <nz-checkbox-wrapper
             style="width: 100%;"
@@ -70,9 +75,14 @@
             </div>
           </nz-checkbox-wrapper>
         </div>
+        <!-- 多选题答卷-end -->
+
+        <!-- 问答题答卷-start -->
         <div *ngIf="question.type === 'qa'">
           <textarea rows="4" nz-input [(ngModel)]="question.answer"></textarea>
         </div>
+        <!-- 问答题答卷-end -->
+
       </div>
     </div>
   </main>
@@ -84,6 +94,7 @@
   </footer>
 </section>
 
+<!-- 提交选择题后显示评判结果-start -->
 <nz-result
   *ngIf="showResult"
   nzStatus="success"
@@ -91,6 +102,8 @@
   nzSubTitle="百尺竿头更进一步！"
 >
   <div nz-result-extra>
-    <button nz-button (click)="retry()">重新答题</button>
+    <button nz-button (click)="reset()">重新答题</button>
   </div>
 </nz-result>
+<!-- 提交选择题后显示评判结果-end -->
+

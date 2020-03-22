@@ -51,22 +51,42 @@ export class StudentComponent implements OnInit {
     lineHeight: '30px'
   };
 
-  radioValue = 'A';
   questionType = '!qa';
   isVisibleTop = false;
   stName = '';
 
+  /**
+   * 索引序号转大写字母序号
+   * 0=>A
+   * @param {number} key
+   * @returns {string}
+   * @memberof StudentComponent
+   */
   getIndex(key: number): string {
     return String.fromCharCode(key + 65);
   }
 
+  /**
+   * 字母序号转索引序号
+   * A=>0
+   * @param {string} key
+   * @returns {number}
+   * @memberof StudentComponent
+   */
   getIndexByStr(key: string): number {
     return key.charCodeAt(0) - 65;
   }
 
+  /**
+   * 从题库中抽入题目组成试卷，默认为选择题类型
+   *
+   * @param {string} [type='selection']
+   * @returns
+   * @memberof StudentComponent
+   */
   getPaper(type = 'selection') {
     this.questionType = type;
-    return this.http.get<[any]>(paperUrl, {params: {type}})
+    return this.http.get<[any]>(paperUrl, { params: { type } })
       .subscribe(
         val => {
           this.paper = {
@@ -83,6 +103,13 @@ export class StudentComponent implements OnInit {
       );
   }
 
+  /**
+   * 提交选择题答卷，并获取评分
+   *
+   * @param {Array<{ id: string, answer: string }>} answers
+   * @returns
+   * @memberof StudentComponent
+   */
   getScore(answers: Array<{ id: string, answer: string }>) {
     return this.http.post<number>(paperUrl, answers, httpOptions)
       .subscribe(
@@ -101,40 +128,35 @@ export class StudentComponent implements OnInit {
       );
   }
 
+  /**
+   * 提交问答题答卷
+   *
+   * @returns
+   * @memberof StudentComponent
+   */
   postQAPaper() {
-    return this.http.post(paperQAUrl,  this.paper, httpOptions)
-    .subscribe(
-      val => {
-        console.log(val);
-      },
-      res => {
-        if (res.status === 200) {
-          this.createNotification('success', '操作成功！');
-        } else {
-          this.createNotification('error', res);
+    return this.http.post(paperQAUrl, this.paper, httpOptions)
+      .subscribe(
+        val => {
+          console.log(val);
+        },
+        res => {
+          if (res.status === 200) {
+            this.createNotification('success', '操作成功！');
+          } else {
+            this.createNotification('error', res);
+          }
         }
-      }
 
-    );
+      );
   }
 
-  handleChangeAnswer(index, e) {
-    const idx = this.getIndexByStr(e);
-    this.answers[index] = idx;
-  }
 
-  handleChangeAnswerMultiple(index, e) {
-    const idx = e.map(item => this.getIndexByStr(item));
-    this.answers[index] = idx.sort().join();
-  }
-
-  handleOkTop() {
-    this.isVisibleTop = false;
-    this.paper.stName = this.stName;
-    this.postQAPaper();
-    this.stName = '';
-  }
-
+  /**
+   * 提交答卷
+   *
+   * @memberof StudentComponent
+   */
   submit() {
     const answers = this.paper.questions.map((item, index) => {
       if (item.type !== 'qa') {
@@ -155,13 +177,50 @@ export class StudentComponent implements OnInit {
 
   }
 
-  retry() {
-    this.answers = [];
-    this.showResult = false;
+  /**
+ * 单选题勾选变化
+ *
+ * @param {*} index
+ * @param {*} e
+ * @memberof StudentComponent
+ */
+  handleChangeAnswer(index, e) {
+    const idx = this.getIndexByStr(e);
+    this.answers[index] = idx;
   }
 
-  ngOnInit() {
-    this.getPaper();
+  /**
+   *
+   * 多选题勾选变化
+   * @param {*} index
+   * @param {*} e
+   * @memberof StudentComponent
+   */
+  handleChangeAnswerMultiple(index, e) {
+    const idx = e.map(item => this.getIndexByStr(item));
+    this.answers[index] = idx.sort().join();
+  }
+
+  /**
+   * 姓名弹窗
+   *
+   * @memberof StudentComponent
+   */
+  handleOkTop() {
+    this.isVisibleTop = false;
+    this.paper.stName = this.stName;
+    this.postQAPaper();
+    this.stName = '';
+  }
+
+  /**
+   *
+   * 重置
+   * @memberof StudentComponent
+   */
+  reset() {
+    this.answers = [];
+    this.showResult = false;
   }
 
   createNotification(type: string, msg: string): void {
@@ -171,4 +230,9 @@ export class StudentComponent implements OnInit {
       msg
     );
   }
+
+  ngOnInit() {
+    this.getPaper();
+  }
+
 }

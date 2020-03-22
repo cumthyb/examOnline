@@ -34,12 +34,20 @@ export class ServerComponent implements OnInit {
   ) { }
 
   listOfData: [IQAPaper];
+
   paper: IQAPaper = {
     questions: [{}]
   };
-  visible = false;
 
+  visible = false; // 抽屉显示隐藏
 
+  /**
+   *
+   * 获取所有的问答题答卷
+   * @param {string} [type='qa']
+   * @returns
+   * @memberof ServerComponent
+   */
   getPapers(type = 'qa') {
     return this.http.get<[IQAPaper]>(paperQAUrl, { params: { type } })
       .subscribe(
@@ -56,8 +64,13 @@ export class ServerComponent implements OnInit {
       );
   }
 
-
-
+  /**
+   *
+   * 获取制定id的答卷
+   * @param {string} id
+   * @returns
+   * @memberof ServerComponent
+   */
   getQAPaper(id: string) {
     return this.http.get<IQAPaper>(paperQAUrl, { params: { id } })
       .subscribe(
@@ -71,22 +84,24 @@ export class ServerComponent implements OnInit {
       );
   }
 
-  open(data) {
-    console.log(data);
-    this.visible = true;
-    this.paper = data;
-  }
-
-  close() {
-    this.visible = false;
-
-  }
-
-
+  /**
+   * 格式化显示时间
+   * 'Y-m-d H:i:s'
+   * @param {number} timeStamp
+   * @returns {string}
+   * @memberof ServerComponent
+   */
   getFormatTime(timeStamp: number): string {
     return timeStamp ? formatTime(timeStamp, 'Y-m-d H:i:s') : '';
   }
 
+  /**
+   * 提交评判结果，并刷新答卷列表
+   *
+   * @param {*} data
+   * @returns
+   * @memberof ServerComponent
+   */
   getScore(data) {
     return this.http.post<number>(paperScoreQAUrl, data, httpOptions)
       .subscribe(
@@ -105,16 +120,43 @@ export class ServerComponent implements OnInit {
 
       );
   }
-
+  /**
+   * 打开右侧抽屉
+   *
+   * @param {*} data
+   * @memberof ServerComponent
+   */
+  open(data) {
+    console.log(data);
+    this.visible = true;
+    this.paper = data;
+  }
+  /**
+   * 关闭右侧抽屉
+   *
+   * @memberof ServerComponent
+   */
+  close() {
+    this.visible = false;
+  }
+  /**
+   * 提交评分
+   *
+   * @memberof ServerComponent
+   */
   submit() {
     this.visible = false;
     const data = this.paper;
     this.getScore(data);
   }
 
-  ngOnInit() {
-    this.getPapers();
-  }
+  /**
+   * 右上角消息
+   *
+   * @param {string} type
+   * @param {string} msg
+   * @memberof ServerComponent
+   */
   createNotification(type: string, msg: string): void {
     this.notification.create(
       type,
@@ -122,4 +164,9 @@ export class ServerComponent implements OnInit {
       msg
     );
   }
+
+  ngOnInit() {
+    this.getPapers();
+  }
+
 }
