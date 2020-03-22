@@ -7,6 +7,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzResultModule } from 'ng-zorro-antd/result';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { NzResultModule } from 'ng-zorro-antd/result';
     NzRadioModule,
     NzCheckboxModule,
     NzInputModule,
-    NzResultModule
+    NzResultModule,
+    NzModalModule
   ],
   declarations: [StudentComponent],
   exports: [StudentComponent]

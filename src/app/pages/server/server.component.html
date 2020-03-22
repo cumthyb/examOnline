@@ -1,1 +1,69 @@
-<h1>server</h1>
+<section>
+  <header>
+    <h1>自助评分及成绩录入</h1>
+  </header>
+
+  <main>
+    <nz-table #basicTable [nzData]="listOfData">
+      <thead>
+        <tr>
+          <th>姓名</th>
+          <th>提交时间</th>
+          <th>批改时间</th>
+          <th>成绩</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{ data.stName }}</td>
+          <td>{{ getFormatTime(data.commitTime) }}</td>
+          <td>{{ getFormatTime(data.correctTime) }}</td>
+          <td>{{ data.score }}</td>
+          <td>
+            <a (click)="open(data)">自助评分</a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+
+    <nz-drawer
+      [nzClosable]="true"
+      [nzVisible]="visible"
+      [nzWidth]="700"
+      nzPlacement="right"
+      nzTitle="自助评分"
+      (nzOnClose)="close()"
+    >
+      <div class='drawer-content'>
+        <div
+          *ngFor="let question of paper.questions; let key = index"
+          class="paper-item"
+        >
+          <p class="title">{{ key + 1 }} : {{ question.questionDesc }}</p>
+          <div class="answer-container">
+            <span>考生作答:</span>
+            <textarea rows="4" nz-input [(ngModel)]="question.answer"></textarea>
+          </div>
+          <div class="score-container">
+            <span>分数评判:</span>
+            <nz-input-number class="score" [(ngModel)]="question.score" [nzMin]="1" [nzMax]="100" [nzStep]="1"></nz-input-number>
+          </div>
+        </div>
+        <div class="btns">
+          <button
+            type="button"
+            (click)="close()"
+            class="ant-btn"
+            style="margin-right: 8px;"
+          >
+            <span>关闭</span>
+          </button>
+          <button type="button" (click)="submit()" class="ant-btn ant-btn-primary">
+            <span>确认添加</span>
+          </button>
+        </div>
+      </div>
+    </nz-drawer>
+  </main>
+</section>

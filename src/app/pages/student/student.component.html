@@ -1,6 +1,30 @@
 <section class="student-zone" *ngIf="!showResult">
   <header>
     <h1>在线作答</h1>
+    <button
+      type="button"
+      (click)="getPaper('selection')"
+      class="ant-btn ant-btn-primary"
+    >
+      <span>选择题</span>
+    </button>
+    <button
+      type="button"
+      (click)="getPaper('qa')"
+      class="ant-btn ant-btn-primary"
+    >
+      <span>问答题</span>
+    </button>
+
+    <nz-modal
+      [nzStyle]="{ top: '20px' }"
+      [(nzVisible)]="isVisibleTop"
+      nzTitle="输入姓名"
+      (nzOnCancel)="isVisibleTop=false"
+      (nzOnOk)="handleOkTop()"
+    >
+    <input nz-input placeholder="姓名" [(ngModel)]="stName" />
+    </nz-modal>
   </header>
 
   <main>
@@ -63,7 +87,7 @@
 <nz-result
   *ngIf="showResult"
   nzStatus="success"
-  nzTitle="{{myScore}}分"
+  nzTitle="{{ myScore }}分"
   nzSubTitle="百尺竿头更进一步！"
 >
   <div nz-result-extra>

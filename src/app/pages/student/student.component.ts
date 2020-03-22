@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import {paperUrl} from '../../api/index';
+import { paperUrl, paperQAUrl } from '../../api/index';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -21,6 +21,7 @@ interface IQuestion {
 }
 
 interface IPaper {
+  stName?: string;
   score?: number;
   totalScore?: number;
   questions: [any];
@@ -51,6 +52,9 @@ export class StudentComponent implements OnInit {
   };
 
   radioValue = 'A';
+  questionType = '!qa';
+  isVisibleTop = false;
+  stName = '';
 
   getIndex(key: number): string {
     return String.fromCharCode(key + 65);
@@ -60,8 +64,9 @@ export class StudentComponent implements OnInit {
     return key.charCodeAt(0) - 65;
   }
 
-  getPaper() {
-    return this.http.get<[any]>(paperUrl)
+  getPaper(type = 'selection') {
+    this.questionType = type;
+    return this.http.get<[any]>(paperUrl, {params: {type}})
       .subscribe(
         val => {
           this.paper = {
@@ -96,6 +101,23 @@ export class StudentComponent implements OnInit {
       );
   }
 
+  postQAPaper() {
+    return this.http.post(paperQAUrl,  this.paper, httpOptions)
+    .subscribe(
+      val => {
+        console.log(val);
+      },
+      res => {
+        if (res.status === 200) {
+          this.createNotification('success', '操作成功！');
+        } else {
+          this.createNotification('error', res);
+        }
+      }
+
+    );
+  }
+
   handleChangeAnswer(index, e) {
     const idx = this.getIndexByStr(e);
     this.answers[index] = idx;
@@ -106,8 +128,14 @@ export class StudentComponent implements OnInit {
     this.answers[index] = idx.sort().join();
   }
 
+  handleOkTop() {
+    this.isVisibleTop = false;
+    this.paper.stName = this.stName;
+    this.postQAPaper();
+    this.stName = '';
+  }
+
   submit() {
-    this.showResult = true;
     const answers = this.paper.questions.map((item, index) => {
       if (item.type !== 'qa') {
         item.answer = this.answers[index];
@@ -117,7 +145,14 @@ export class StudentComponent implements OnInit {
         answer: (item.answer as string) || '-1'
       };
     });
-    this.getScore(answers);
+
+    if (this.questionType === 'qa') {
+      this.isVisibleTop = true;
+    } else {
+      this.showResult = true;
+      this.getScore(answers);
+    }
+
   }
 
   retry() {
