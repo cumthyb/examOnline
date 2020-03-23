@@ -1,27 +1,73 @@
-# ExamOnline
+# 在线考试系统
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.7.
+## install & run
 
-## Development server
+```bash
+git clone *****
+yarn
+```
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## 需求
 
-## Code scaffolding
+- 试卷设计 (Teacher) 必选
+  - 试题类型应至少包含单项选择题，多项选择题以及问答题。
+  - 每个问题应至少包含问题描述，答案列表或作答区域。
+  - Teacher 能够新增问题，编辑问题以及删除问题，交互流畅。
+  - 试卷设计完成后应当能够以 JSON 格式在服务器端存储，以便进行后续编辑，以及供在线作答模块使用。
+- 在线作答 (Student) 可选
+  - Student 拿到考试链接，进入特定考试进行作答。
+  - 作答完成后，提交答案，网页显示考试得分。
+- 自助评分及成绩录入 (Server) 可选
+  - Server 端需提供 REST API，至少包含一个接口，即为用户提交的答案进行评分。
+  - 评分后记录学生的考试成绩。
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## 进度
 
-## Build
+| 项目                                                         | 优先级 | 预计时间 | 实际时间 |
+| ------------------------------------------------------------ | ------ | -------- | -------- |
+| 1. 需求理解                                                  | p0     | 0.5小时  | 0.5小时  |
+| 2. 准备工作<br />anjular-cli基本语法 <br />https://angular.cn/start<br />anjular-todolist<br />Ant Design of Angular 框架学习 | p0     | 12小时   | 8小时    |
+| 3. 项目架构构思-前端工程搭建：<br />	cli搭建工程<br />	引入Ant Design of Angular<br />	文件目录结构<br /> | p0     | 1小时    | 1 小时   |
+| 4. 项目架构构思-后端工程搭建：<br />	路由设计<br />	utils (读写文件)<br /> | p0     | 0.5小时  | 0.5小时  |
+| 5. 试卷设计模块<br/>1.  试题数据结构设计<br/>2.  UI及组件开发<br/>    a. 单选题<br/>    b 多选题<br/>    c. 问答题<br/>    d 问卷题<br/>3.  接口开发<br/>    a. angular httpClient模块使用<br/>    b 试题保存接口 post<br/>    c. 试题编辑更新接口 put<br/>    d. 试题删除接口 delete<br/>    e. 试题分类插叙接口 get<br/>    f. 接口调试 | p0     | 6 小时   | 7小时    |
+| 6. 在线作答模块<br/><br/>1.  试卷数据结构设计<br/>2.  UI组件开发<br/>    a. 单选题答题<br/>    b. 多选题答题<br/>    c. 问答题答题<br/>3.  接口开发<br/>    a. 获取随机试题组成试卷接口get<br/>    b. 计算答题分数接口post<br/>    c. 接口调试 | p1     | 3小时    | 2小时    |
+| 7. 自助评分及成绩录入模块<br />1.UI设计<br />    a.列表页 <br />	b.评分 <br />2.接口开发<br />    a.列表接口 <br />	b.评分接口 | p2     | 3小时    | 2小时    |
+| 8. 代码整理                                                  | p1     | 1 小时   | 0.5小时  |
+| 9. 文档整理                                                  | p1     | 1小时    | 1小时    |
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## 缺陷和bug
 
-## Running unit tests
+### 缺陷
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- 项目
+  1. 权限设计
 
-## Running end-to-end tests
+- 前端
+  1. 项目的业务场景下，ssr模式可能会更适合
+  2. 三个模块业务耦合性不高，可以多入口打包
+  3. 组件抽象
+  4. UI、交互
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+- 后端
 
-## Further help
+  1. 接口风格，响应没有结构化
+  2. 数据存储
+  3. 缓存
+  4. 高并发
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+### 已知bug
+
+
+
+## 产品形式与设计方案
+
+- 2B
+- 2C
+
+## 遇到的问题
+
+- core.js:12565 Can't bind to 'ngForof' since it isn't a known property of 'div'
+- form表单
+- Ant Design of Angular
+- koa-bodyparse 处理post的包体，转换失败
+- angular组件引入顺序
